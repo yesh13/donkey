@@ -207,45 +207,6 @@ namespace donkey {
     Index *create_kgraph_index (Config const &);
     Index *create_lsh_index (Config const &);
 
-    // utility functions
-    
-    static inline void ReadFile (const std::string &path, std::string *binary) {
-        // file could not be too big
-        binary->clear();
-        ifstream is(path.c_str(), std::ios::binary);
-        if (!is) return;
-        is.seekg(0, std::ios::end);
-        size_t size = size_t(is.tellg());
-        if (size > MAX_BINARY) return;
-        binary->resize(size);
-        if (size) {
-            is.seekg(0, std::ios::beg);
-            is.read((char *)&binary->at(0), size);
-        }
-        if (!is) binary->clear();
-    }
-
-    static inline void WriteFile (const std::string &path, std::string const &binary) {
-        // file could not be too big
-        ofstream os(path.c_str(), ios::binary);
-        os.write(&binary[0], binary.size());
-    }
-
-    struct ObjectBase {
-        string meta;
-    };
-
-    // Feature extractor interface.
-    class ExtractorBase {
-    public:
-        virtual ~ExtractorBase () {}
-        virtual void extract_path (string const &path, Object *object) const {
-            string content;
-            ReadFile(path, &content);
-            extract(content, object);
-        }
-        virtual void extract (string const &content, Object *object) const; 
-    };
 }
 
 // data-type-specific configuration
